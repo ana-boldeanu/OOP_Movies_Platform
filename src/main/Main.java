@@ -16,7 +16,7 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 /**
- * The entry point to this homework. It runs the checker that tests your implentation.
+ * The entry point to this homework. It runs the checker that tests your implementation.
  */
 public final class Main {
     /**
@@ -71,6 +71,7 @@ public final class Main {
         JSONArray arrayResult = new JSONArray();
 
         //TODO add here the entry point to your implementation
+        arrayResult.add(fileWriter.writeFile(0, "movie", "message"));
 
         fileWriter.closeJSON(arrayResult);
     }
