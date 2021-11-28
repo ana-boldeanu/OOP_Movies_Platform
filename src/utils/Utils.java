@@ -53,6 +53,32 @@ public final class Utils {
         };
     }
 
+    public static String genreToString(Genre genre) {
+        return switch (genre.toString().toLowerCase()) {
+            case "action" -> "Action";
+            case "adventure" -> "Adventure";
+            case "drama" -> "Drama";
+            case "comedy" -> "Comedy";
+            case "crime" -> "Crime";
+            case "romance" -> "Romance";
+            case "war" -> "War";
+            case "history" -> "History";
+            case "thriller" -> "Thriller";
+            case "mystery" -> "Mystery";
+            case "family" -> "Family";
+            case "horror" -> "Horror";
+            case "fantasy" -> "Fantasy";
+            case "science_fiction" -> "Science Fiction";
+            case "action_adventure" -> "Action & Adventure";
+            case "sci_fi_fantasy" -> "Sci-Fi & Fantasy";
+            case "animation" -> "Animation";
+            case "kids" -> "Kids";
+            case "western" -> "Western";
+            case "tv_movie" -> "TV Movie";
+            default -> null;
+        };
+    }
+
     /**
      * Transforms a string into an enum
      * @param award for actors
@@ -65,6 +91,17 @@ public final class Utils {
             case "BEST_DIRECTOR" -> ActorsAwards.BEST_DIRECTOR;
             case "BEST_PERFORMANCE" -> ActorsAwards.BEST_PERFORMANCE;
             case "PEOPLE_CHOICE_AWARD" -> ActorsAwards.PEOPLE_CHOICE_AWARD;
+            default -> null;
+        };
+    }
+
+    public static String awardsToString(ActorsAwards award) {
+        return switch(award.toString().toLowerCase()) {
+            case "best_screenplay" -> "BEST_SCREENPLAY";
+            case "best_supporting_actor" -> "BEST_SUPPORTING_ACTOR";
+            case "best_director" -> "BEST_DIRECTOR";
+            case "best_performance" -> "BEST_PERFORMANCE";
+            case "people_choice_award" -> "PEOPLE_CHOICE_AWARD";
             default -> null;
         };
     }
