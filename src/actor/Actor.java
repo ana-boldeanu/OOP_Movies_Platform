@@ -1,6 +1,11 @@
 package actor;
 
+import entertainment.Movie;
+import entertainment.Serial;
+import utils.Utils;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -16,10 +21,13 @@ public class Actor {
      */
     private final String careerDescription;
     /**
-     * List of the shows that the actor played in
+     * List of the Movies that the actor played in
      */
-    private ArrayList<String> filmography;
-    // TODO: Sa-mi dau seama de unde iau lista asta
+    private ArrayList<Movie> moviesFilmography;
+    /**
+     * List of the Movies that the actor played in
+     */
+    private ArrayList<Serial> serialsFilmography;
     /**
      * Map of awards received by the actor (and their number)
      */
@@ -30,16 +38,65 @@ public class Actor {
     private int numberOfAwards;
     /**
      * Rating of the actor, given by the average of the ratings of the shows
-     * in rolesList.
+     * in filmography.
      */
-    private int averageRating;
+    private double rating;
 
     public Actor(final String name, Map<ActorsAwards, Integer> awards,
-                 ArrayList<String> filmography, final String careerDescription) {
+                 ArrayList<Movie> moviesFilmography, ArrayList<Serial> serialsFilmography,
+                 final String careerDescription) {
         this.name = name;
         this.careerDescription = careerDescription;
-        this.filmography = filmography;
+        this.moviesFilmography = moviesFilmography;
+        this.serialsFilmography = serialsFilmography;
         this.awards = awards;
+        this.rating = Double.valueOf(0);
+    }
+
+    public void computeRating() {
+        double sum = 0;
+        int noShows = 0;
+        for (Movie movie : moviesFilmography) {
+            movie.computeRating();
+            if (movie.getFinalRating() != 0) {
+                sum += movie.getFinalRating();
+                noShows++;
+            }
+        }
+        for (Serial serial : serialsFilmography) {
+            serial.computeRating();
+            if (serial.getFinalRating() != 0) {
+                sum += serial.getFinalRating();
+                noShows++;
+            }
+        }
+        this.rating = sum;
+    }
+
+    public boolean hasAwards(List<String> wantedAwards) {
+        for (String award : wantedAwards) {
+            if (!awards.containsKey(Utils.stringToAwards(award))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void computeNoAwards(List<String> wantedAwards) {
+        for (Map.Entry<ActorsAwards, Integer> awardEntry : awards.entrySet()) {
+            if (wantedAwards.contains(awardEntry.getValue())) {
+                numberOfAwards += awardEntry.getValue();
+            }
+        }
+    }
+
+    public boolean hasKeyWords(List<String> keyWords) {
+        for (String keyWord : keyWords) {
+            if (!careerDescription.contains(keyWord)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public String getName() {
@@ -50,11 +107,20 @@ public class Actor {
         return careerDescription;
     }
 
-    public ArrayList<String> getFilmography() {
-        return filmography;
+    public int getNumberOfAwards() {
+        return numberOfAwards;
+    }
+
+    public double getRating() {
+        return rating;
     }
 
     public Map<ActorsAwards, Integer> getAwards() {
         return awards;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

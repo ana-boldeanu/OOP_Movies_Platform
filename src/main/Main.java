@@ -1,18 +1,29 @@
 package main;
 
+import actions.Action;
+import actions.DataContainer;
+import actor.Actor;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
+import entertainment.Movie;
+import entertainment.Serial;
+import entertainment.Show;
+import fileio.ActionInputData;
 import fileio.Input;
 import fileio.InputLoader;
 import fileio.Writer;
 import org.json.simple.JSONArray;
+import user.User;
 
+import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -70,8 +81,65 @@ public final class Main {
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
-        //TODO add here the entry point to your implementation
-        arrayResult.add(fileWriter.writeFile(0, "movie", "message"));
+        // TODO add here the entry point to your implementation
+        DataContainer data = new DataContainer(input); // Transform input into my own input classes
+        Action action = new Action(data);
+        String resultMessage = new String();
+
+        for (ActionInputData command : input.getCommands()) {
+            if (command.getActionType().equals("command")) {
+                switch (command.getType()) {
+                    case "favorite":
+                         resultMessage = action.commandFavourite(command.getUsername(),
+                                 command.getTitle());
+                        break;
+
+                    case "view":
+                        resultMessage = action.commandView(command.getUsername(),
+                                command.getTitle());
+                        break;
+
+                    case "rating":
+                        resultMessage = action.commandRating(command.getUsername(),
+                                command.getTitle(), command.getGrade(),
+                                command.getSeasonNumber());
+                        break;
+                }
+
+            } else if (command.getActionType().equals("query")) {
+                resultMessage = "Query result: ";
+
+                switch (command.getObjectType()) {
+                    case "actors":
+                        List<Actor> actors = action.queryActors(command.getNumber(),
+                                command.getFilters(), command.getSortType(),
+                                command.getCriteria());
+                        resultMessage += actors;
+                        break;
+
+                    case "movies":
+                    case "shows":
+                        List<Show> shows = action.queryShows(command.getNumber(),
+                                command.getFilters(), command.getSortType(),
+                                command.getCriteria());
+                        resultMessage += shows;
+                        break;
+
+                    case "users":
+                        List<User> users = action.queryUsers(command.getNumber(),
+                                command.getSortType(), command.getCriteria());
+                        resultMessage += users;
+                        break;
+                }
+
+            } else if (command.getActionType().equals("recommendation")) {
+
+            }
+
+            arrayResult.add(fileWriter.writeFile(command.getActionId(),
+                    "", resultMessage));
+        }
+
 
         fileWriter.closeJSON(arrayResult);
     }

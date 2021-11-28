@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Information about a season of a tv show
+ * Information about a season of a TV show
  * <p>
  * DO NOT MODIFY
  */
@@ -26,6 +26,10 @@ public final class Season {
         this.currentSeason = currentSeason;
         this.duration = duration;
         this.ratings = new ArrayList<>();
+    }
+
+    public int getCurrentSeason() {
+        return currentSeason;
     }
 
     public int getDuration() {
