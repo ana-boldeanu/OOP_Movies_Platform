@@ -53,7 +53,12 @@ public final class Utils {
         };
     }
 
-    public static String genreToString(Genre genre) {
+    /**
+     * Transforms an enum into a string
+     * @param genre of the Show
+     * @return The name of the Genre
+     */
+    public static String genreToString(final Genre genre) {
         return switch (genre.toString().toLowerCase()) {
             case "action" -> "Action";
             case "adventure" -> "Adventure";
@@ -95,8 +100,13 @@ public final class Utils {
         };
     }
 
-    public static String awardsToString(ActorsAwards award) {
-        return switch(award.toString().toLowerCase()) {
+    /**
+     * Transforms an enum into a string
+     * @param award for Actors
+     * @return a String with the name of the award
+     */
+    public static String awardsToString(final ActorsAwards award) {
+        return switch (award.toString().toLowerCase()) {
             case "best_screenplay" -> "BEST_SCREENPLAY";
             case "best_supporting_actor" -> "BEST_SUPPORTING_ACTOR";
             case "best_director" -> "BEST_DIRECTOR";
