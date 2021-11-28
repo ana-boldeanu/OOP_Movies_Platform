@@ -1,13 +1,13 @@
 package main;
 
-import actions.Action;
+import actions.CommandAction;
 import actions.DataContainer;
+import actions.QueryAction;
+import actions.RecommendAction;
 import actor.Actor;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
-import entertainment.Movie;
-import entertainment.Serial;
 import entertainment.Show;
 import fileio.ActionInputData;
 import fileio.Input;
@@ -16,13 +16,11 @@ import fileio.Writer;
 import org.json.simple.JSONArray;
 import user.User;
 
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -73,92 +71,123 @@ public final class Main {
      * @param filePath2 for output file
      * @throws IOException in case of exceptions to reading / writing
      */
-    public static void action(final String filePath1,
-                              final String filePath2) throws IOException {
+    public static void action(final String filePath1, final String filePath2) throws IOException {
         InputLoader inputLoader = new InputLoader(filePath1);
         Input input = inputLoader.readData();
 
         Writer fileWriter = new Writer(filePath2);
         JSONArray arrayResult = new JSONArray();
 
-        // TODO add here the entry point to your implementation
+        // Entry point
         DataContainer data = new DataContainer(input); // Transform input into my own input classes
-        Action action = new Action(data);
-        String resultMessage = new String();
+        String resultMessage = "";
 
         for (ActionInputData command : input.getCommands()) {
-            if (command.getActionType().equals("command")) {
-                switch (command.getType()) {
-                    case "favorite":
-                         resultMessage = action.commandFavourite(command.getUsername(),
-                                 command.getTitle());
-                        break;
+            /**
+             * The user that executes a Command or asks for a Recommendation
+             */
+            User actionUser = new User();
+            for (User user : data.getUsersList()) {
+                if (user.getUsername().equals(command.getUsername())) {
+                    actionUser = user;
+                }
+            }
 
-                    case "view":
-                        resultMessage = action.commandView(command.getUsername(),
-                                command.getTitle());
-                        break;
+            switch (command.getActionType()) {
+                case "command" -> {
+                    CommandAction commandAction = new CommandAction(data);
 
-                    case "rating":
-                        resultMessage = action.commandRating(command.getUsername(),
-                                command.getTitle(), command.getGrade(),
-                                command.getSeasonNumber());
-                        break;
+                    switch (command.getType()) {
+                        case "favorite":
+                            resultMessage = commandAction.addFavourite(actionUser,
+                                    command.getTitle());
+                            break;
+
+                        case "view":
+                            resultMessage = commandAction.addView(actionUser,
+                                    command.getTitle());
+                            break;
+
+                        case "rating":
+                            resultMessage = commandAction.addRating(actionUser,
+                                    command.getTitle(), command.getGrade(),
+                                    command.getSeasonNumber());
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
 
-            } else if (command.getActionType().equals("query")) {
-                resultMessage = "Query result: ";
+                case "query" -> {
+                    QueryAction queryAction = new QueryAction(data);
+                    resultMessage = "Query result: ";
 
-                switch (command.getObjectType()) {
-                    case "actors":
-                        List<Actor> actors = action.queryActors(command.getNumber(),
-                                command.getFilters(), command.getSortType(),
-                                command.getCriteria());
-                        resultMessage += actors;
-                        break;
+                    switch (command.getObjectType()) {
+                        case "actors":
+                            List<Actor> actors = queryAction.queryActors(command.getNumber(),
+                                    command.getFilters(), command.getSortType(),
+                                    command.getCriteria());
+                            resultMessage += actors;
+                            break;
 
-                    case "movies":
-                        List<Show> movies = action.queryShows(command.getNumber(),
-                                command.getFilters(), command.getSortType(),
-                                command.getCriteria(), "movies");
-                        resultMessage += movies;
-                        break;
+                        case "movies":
+                            List<Show> movies = queryAction.queryShows(command.getNumber(),
+                                    command.getFilters(), command.getSortType(),
+                                    command.getCriteria(), "movies");
+                            resultMessage += movies;
+                            break;
 
-                    case "shows":
-                        List<Show> shows = action.queryShows(command.getNumber(),
-                                command.getFilters(), command.getSortType(),
-                                command.getCriteria(), "shows");
-                        resultMessage += shows;
-                        break;
+                        case "shows":
+                            List<Show> shows = queryAction.queryShows(command.getNumber(),
+                                    command.getFilters(), command.getSortType(),
+                                    command.getCriteria(), "shows");
+                            resultMessage += shows;
+                            break;
 
-                    case "users":
-                        List<User> users = action.queryUsers(command.getNumber(),
-                                command.getSortType(), command.getCriteria());
-                        resultMessage += users;
-                        break;
+                        case "users":
+                            List<User> users = queryAction.queryUsers(command.getNumber(),
+                                    command.getSortType(), command.getCriteria());
+                            resultMessage += users;
+                            break;
+
+                        default:
+                            break;
+                    }
                 }
 
-            } else if (command.getActionType().equals("recommendation")) {
-                switch (command.getType()) {
-                    case "standard":
-                        resultMessage = action.recommendStandard(command.getUsername());
-                        break;
+                case "recommendation" -> {
+                    RecommendAction recommendAction = new RecommendAction(data);
 
-                    case "best_unseen":
-                        resultMessage = action.recommendBestUnseen(command.getUsername());
-                        break;
+                    switch (command.getType()) {
+                        case "standard":
+                            resultMessage = recommendAction.getStandard(actionUser);
+                            break;
 
-                    case "popular":
-                        resultMessage = action.recommendPopular(command.getUsername());
-                        break;
+                        case "best_unseen":
+                            resultMessage = recommendAction.getBestUnseen(actionUser);
+                            break;
 
-                    case "favorite":
-                        resultMessage = action.recommendFavourite(command.getUsername());
-                        break;
+                        case "popular":
+                            resultMessage = recommendAction.getPopular(actionUser);
+                            break;
 
-                    case "search":
-                        resultMessage = action.recommendSearch(command.getUsername(), command.getGenre());
-                        break;
+                        case "favorite":
+                            resultMessage = recommendAction.getFavourite(actionUser);
+                            break;
+
+                        case "search":
+                            resultMessage = recommendAction.getSearch(actionUser,
+                                    command.getGenre());
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                default -> {
+                    break;
                 }
             }
 

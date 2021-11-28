@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 /**
  * Information about an Actor
  */
-public class Actor {
+public final class Actor {
     /**
      * Name of the actor
      */
@@ -25,15 +25,15 @@ public class Actor {
     /**
      * List of the Movies that the actor played in
      */
-    private ArrayList<Movie> moviesFilmography;
+    private final ArrayList<Movie> moviesFilmography;
     /**
      * List of the Movies that the actor played in
      */
-    private ArrayList<Serial> serialsFilmography;
+    private final ArrayList<Serial> serialsFilmography;
     /**
      * Map of awards received by the actor (and their number)
      */
-    private Map<ActorsAwards, Integer> awards;
+    private final Map<ActorsAwards, Integer> awards;
     /**
      * Number of received awards
      */
@@ -44,21 +44,29 @@ public class Actor {
      */
     private double rating;
 
-    public Actor(final String name, Map<ActorsAwards, Integer> awards,
-                 ArrayList<Movie> moviesFilmography, ArrayList<Serial> serialsFilmography,
-                 final String careerDescription) {
+    public Actor(final String name, final Map<ActorsAwards, Integer> awards,
+                 final ArrayList<Movie> moviesFilmography, final String careerDescription,
+                 final ArrayList<Serial> serialsFilmography) {
         this.name = name;
         this.careerDescription = careerDescription;
         this.moviesFilmography = moviesFilmography;
         this.serialsFilmography = serialsFilmography;
         this.awards = awards;
-        this.rating = Double.valueOf(0);
+        this.rating = 0;
     }
 
+    /**
+     * Calculates the rating of the Actor as average of the ratings of all
+     * the Shows from their filmography. The rating must always be computed
+     * before using its getter. After use, the rating must be reset to 0
+     * with its setter (So that if we need to update it later, its value
+     * will not stack).
+     */
     public void computeRating() {
         double sum = 0;
         int noShows = 0;
 
+        // The movies they played in
         for (Movie movie : moviesFilmography) {
             movie.computeRating();
             if (movie.getFinalRating() != 0) {
@@ -68,6 +76,7 @@ public class Actor {
             movie.setFinalRating(0);
         }
 
+        // The serials they played in
         for (Serial serial : serialsFilmography) {
             serial.computeRating();
             if (serial.getFinalRating() != 0) {
@@ -84,7 +93,14 @@ public class Actor {
         }
     }
 
-    public boolean hasAwards(List<String> wantedAwards) {
+    /**
+     * Check if the Actor has received *all* the awards from the list of awards
+     * given as parameter.
+     * @param wantedAwards The awards we search for
+     * @return false if at least one award does not exist in the Actor's awards
+     *         list, true otherwise.
+     */
+    public boolean hasAwards(final List<String> wantedAwards) {
         for (String award : wantedAwards) {
             if (!awards.containsKey(Utils.stringToAwards(award))) {
                 return false;
@@ -93,16 +109,29 @@ public class Actor {
         return true;
     }
 
+    /**
+     * Compute the total numberOfAwards that the Actor has received so far.
+     * The numberOfAwards must always be computed before using its getter.
+     * After use, the numberOfAwards must be reset to 0 with its setter (So that
+     * if we need to use it again later, it will not stack its value)
+     */
     public void computeNoAwards() {
         for (Map.Entry<ActorsAwards, Integer> awardEntry : awards.entrySet()) {
             numberOfAwards += awardEntry.getValue();
         }
     }
 
-    public boolean hasKeyWords(List<String> keyWords) {
+    /**
+     * Uses regex to check if the Actor's careerDescription contains *all* the
+     * keyWords from the list of keyWords given as parameter.
+     * @param keyWords List of keyWords that we look for
+     * @return true if all the keyWords have been found
+     */
+    public boolean hasKeyWords(final List<String> keyWords) {
         for (String keyWord : keyWords) {
 
-            Pattern pattern = Pattern.compile("[ .,-]" + keyWord + "[ .,-]", Pattern.CASE_INSENSITIVE);
+            Pattern pattern = Pattern.compile("[ .,-]" + keyWord + "[ .,-]",
+                    Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(careerDescription);
 
             boolean matchFound = matcher.find();
@@ -117,10 +146,6 @@ public class Actor {
 
     public String getName() {
         return name;
-    }
-
-    public String getCareerDescription() {
-        return careerDescription;
     }
 
     public int getNumberOfAwards() {

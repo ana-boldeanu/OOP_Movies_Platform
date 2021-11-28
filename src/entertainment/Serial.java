@@ -1,15 +1,11 @@
 package entertainment;
 
-import actions.DataContainer;
-import user.User;
-
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Extra/specific information about a Serial
  */
-public class Serial extends Show {
+public final class Serial extends Show {
     /**
      * Number of seasons
      */
@@ -17,7 +13,7 @@ public class Serial extends Show {
     /**
      * List of seasons
      */
-    private ArrayList<Season> seasons;
+    private final ArrayList<Season> seasons;
 
     public Serial(final String title, final int year, final int numberOfSeasons,
                   final ArrayList<String> genres, final ArrayList<String> cast,
@@ -27,27 +23,37 @@ public class Serial extends Show {
         this.seasons = seasons;
     }
 
-    public void receiveRating(double rating, int seasonNumber) {
+    /**
+     * Updates the list of ratings that have been received so far by one of
+     * the Seasons of this Serial.
+     * @param rating The rating to be added
+     * @param seasonNumber The number of the season that received the rating
+     */
+    public void receiveRating(final double rating, final int seasonNumber) {
         for (Season season : seasons) {
             if (season.getCurrentSeason() == seasonNumber) {
-                season.getRatings().add(Double.valueOf(rating));
+                season.getRatings().add(rating);
             }
         }
     }
 
+    /**
+     * Computes finalRating as average of the ratings of each Season for this
+     * Serial (if at least one Season has been rated so far).
+     */
     @Override
     public void computeRating() {
         double sum = 0;
-        boolean OK = false;
+        boolean hasOne = false;
         for (Season season : seasons) {
             if (season.getRatings().size() > 0) {
                 for (Double rating : season.getRatings()) {
-                    sum += rating.doubleValue();
+                    sum += rating;
                 }
-                OK = true;
+                hasOne = true; // At least one season was rated
             }
         }
-        if (OK) {
+        if (hasOne) {
             this.finalRating = sum / numberOfSeasons;
 
         } else {
@@ -55,6 +61,10 @@ public class Serial extends Show {
         }
     }
 
+    /**
+     * Computes totalDuration of the Serial as sum of the durations of its
+     * Seasons.
+     */
     @Override
     public void computeTotalDuration() {
         for (Season season : seasons) {
@@ -62,14 +72,7 @@ public class Serial extends Show {
         }
     }
 
-
-
-    public int getNumberOfSeasons() {
-        return numberOfSeasons;
-    }
-
     public ArrayList<Season> getSeasons() {
         return seasons;
     }
-
 }

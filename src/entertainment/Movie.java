@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Extra/specific information about a Movie
  */
-public class Movie extends Show {
+public final class Movie extends Show {
     /**
      * Duration of the movie
      */
@@ -13,8 +13,7 @@ public class Movie extends Show {
     /**
      * List of ratings received so far
      */
-    private ArrayList<Double> ratingsList;
-
+    private final ArrayList<Double> ratingsList;
 
     public Movie(final String title, final int year, final int duration,
                  final ArrayList<String> genres, final ArrayList<String> cast) {
@@ -23,16 +22,23 @@ public class Movie extends Show {
         this.ratingsList = new ArrayList<>();
     }
 
+    /**
+     * Updates the list of ratings that have been received so far.
+     * @param rating The new rating to be added
+     */
     public void receiveRating(double rating) {
-        ratingsList.add(Double.valueOf(rating));
+        ratingsList.add(rating);
     }
 
+    /**
+     * Computes finalRating as average of ratings received so far.
+     */
     @Override
     public void computeRating() {
         if (ratingsList.size() > 0) {
             double sum = 0;
             for (Double rating : ratingsList) {
-                sum += rating.doubleValue();
+                sum += rating;
             }
             this.finalRating = sum / ratingsList.size();
 
@@ -41,6 +47,10 @@ public class Movie extends Show {
         }
     }
 
+    /**
+     * Computes the totalDuration of the Movie, which is the same as its
+     * duration.
+     */
     @Override
     public void computeTotalDuration() {
         totalDuration = duration;
