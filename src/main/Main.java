@@ -118,10 +118,16 @@ public final class Main {
                         break;
 
                     case "movies":
+                        List<Show> movies = action.queryShows(command.getNumber(),
+                                command.getFilters(), command.getSortType(),
+                                command.getCriteria(), "movies");
+                        resultMessage += movies;
+                        break;
+
                     case "shows":
                         List<Show> shows = action.queryShows(command.getNumber(),
                                 command.getFilters(), command.getSortType(),
-                                command.getCriteria());
+                                command.getCriteria(), "shows");
                         resultMessage += shows;
                         break;
 
@@ -133,13 +139,32 @@ public final class Main {
                 }
 
             } else if (command.getActionType().equals("recommendation")) {
+                switch (command.getType()) {
+                    case "standard":
+                        resultMessage = action.recommendStandard(command.getUsername());
+                        break;
 
+                    case "best_unseen":
+                        resultMessage = action.recommendBestUnseen(command.getUsername());
+                        break;
+
+                    case "popular":
+                        resultMessage = action.recommendPopular(command.getUsername());
+                        break;
+
+                    case "favorite":
+                        resultMessage = action.recommendFavourite(command.getUsername());
+                        break;
+
+                    case "search":
+                        resultMessage = action.recommendSearch(command.getUsername(), command.getGenre());
+                        break;
+                }
             }
 
             arrayResult.add(fileWriter.writeFile(command.getActionId(),
                     "", resultMessage));
         }
-
 
         fileWriter.closeJSON(arrayResult);
     }

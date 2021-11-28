@@ -58,10 +58,8 @@ public abstract class Show {
 
     public void computeTimesFavorite(DataContainer data) {
         for (User user : data.getUsersList()) {
-            for (String show : user.getFavoriteShows()) {
-                if (title.equals(show)) {
-                    timesFavorite++;
-                }
+            if (user.getFavoriteShows().contains(title)) {
+                timesFavorite++;
             }
         }
     }

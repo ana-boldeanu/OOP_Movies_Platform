@@ -82,11 +82,9 @@ public class Actor {
         return true;
     }
 
-    public void computeNoAwards(List<String> wantedAwards) {
+    public void computeNoAwards() {
         for (Map.Entry<ActorsAwards, Integer> awardEntry : awards.entrySet()) {
-            if (wantedAwards.contains(awardEntry.getValue())) {
-                numberOfAwards += awardEntry.getValue();
-            }
+            numberOfAwards += awardEntry.getValue();
         }
     }
 
