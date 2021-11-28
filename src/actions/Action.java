@@ -66,6 +66,7 @@ public class Action {
                 for (Actor actor : actors) {
                     actor.computeRating();
                 }
+
                 Collections.sort(actors, new Comparator<Actor>() {
                     @Override
                     public int compare(Actor actor1, Actor actor2) {
@@ -75,9 +76,11 @@ public class Action {
                         return Double.compare(actor1.getRating(), actor2.getRating());
                     }
                 });
+
                 if (sortType.equals("desc")) {
                     Collections.reverse(actors);
                 }
+
                 for (Actor actor : actors) {
                     if (actor.getRating() > 0) {
                         sortedActors.add(actor);
@@ -87,6 +90,11 @@ public class Action {
                         break;
                     }
                 }
+
+                for (Actor actor : actors) {
+                    actor.setRating(0);
+                }
+
                 break;
 
             case "awards":
@@ -96,6 +104,7 @@ public class Action {
                         sortedActors.add(actor);
                     }
                 }
+
                 Collections.sort(sortedActors, new Comparator<Actor>() {
                     @Override
                     public int compare(Actor o1, Actor o2) {
@@ -105,8 +114,13 @@ public class Action {
                         return Integer.compare(o1.getNumberOfAwards(), o2.getNumberOfAwards());
                     }
                 });
+
                 if (sortType.equals("desc")) {
                     Collections.reverse(sortedActors);
+                }
+
+                for (Actor actor : actors) {
+                    actor.setNumberOfAwards(0);
                 }
                 break;
 
@@ -191,6 +205,9 @@ public class Action {
                 Collections.sort(filteredShows, new Comparator<Show>() {
                     @Override
                     public int compare(Show o1, Show o2) {
+                        if (o1.getFinalRating() == o2.getFinalRating()) {
+                            return o1.getTitle().compareTo(o2.getTitle());
+                        }
                         return Double.compare(o1.getFinalRating(), o2.getFinalRating());
                     }
                 });
@@ -212,6 +229,9 @@ public class Action {
                 Collections.sort(filteredShows, new Comparator<Show>() {
                     @Override
                     public int compare(Show o1, Show o2) {
+                        if (o1.getTimesFavorite() == o2.getTimesFavorite()) {
+                            return o1.getTitle().compareTo(o2.getTitle());
+                        }
                         return Integer.compare(o1.getTimesFavorite(), o2.getTimesFavorite());
                     }
                 });
@@ -233,6 +253,9 @@ public class Action {
                 Collections.sort(filteredShows, new Comparator<Show>() {
                     @Override
                     public int compare(Show o1, Show o2) {
+                        if (o1.getTotalDuration() == o2.getTotalDuration()) {
+                            return o1.getTitle().compareTo(o2.getTitle());
+                        }
                         return Integer.compare(o1.getTotalDuration(), o2.getTotalDuration());
                     }
                 });
@@ -252,6 +275,9 @@ public class Action {
                 Collections.sort(filteredShows, new Comparator<Show>() {
                     @Override
                     public int compare(Show o1, Show o2) {
+                        if (o1.getTimesViewed() == o2.getTimesViewed()) {
+                            return o1.getTitle().compareTo(o2.getTitle());
+                        }
                         return Integer.compare(o1.getTimesViewed(), o2.getTimesViewed());
                     }
                 });
@@ -268,6 +294,13 @@ public class Action {
                     }
                 }
                 break;
+        }
+
+        for (Show show : filteredShows) {
+            show.setFinalRating(0);
+            show.setTimesFavorite(0);
+            show.setTimesViewed(0);
+            show.setTotalDuration(0);
         }
 
         return sortedShows;
@@ -305,6 +338,10 @@ public class Action {
             }
         }
 
+        for (User user : users) {
+            user.setNoRatings(0);
+        }
+
         return sortedUsers;
     }
 
@@ -340,6 +377,10 @@ public class Action {
                 return Double.compare(o2.getFinalRating(), o1.getFinalRating());
             }
         });
+
+        for (Show show : shows) {
+            show.setFinalRating(0);
+        }
 
         for (User user : data.getUsersList()) {
             if (user.getUsername().equals(username)) {
@@ -388,7 +429,10 @@ public class Action {
             int rating = 0;
             for (Show show : filteredShows) {
                 show.computeTimesViewed(data);
+
                 rating += show.getTimesViewed();
+
+                show.setTimesViewed(0);
             }
 
             genres.add(new GenrePopularity(Utils.genreToString(genre), rating));
@@ -432,6 +476,8 @@ public class Action {
         shows.addAll(data.getMoviesList());
         shows.addAll(data.getSerialsList());
 
+        String message = new String();
+
         for (Show show : shows) {
             show.computeTimesFavorite(data);
         }
@@ -439,24 +485,37 @@ public class Action {
         Collections.sort(shows, new Comparator<Show>() {
             @Override
             public int compare(Show o1, Show o2) {
-                return Integer.compare(o1.getTimesFavorite(), o2.getTimesFavorite());
+                return Integer.compare(o2.getTimesFavorite(), o1.getTimesFavorite());
             }
         });
-        Collections.reverse(shows);
+
+        boolean found = false;
+        String result = "";
 
         for (User user : data.getUsersList()) {
             if (user.getUsername().equals(username)) {
                 for (Show show : shows) {
                     if (show.getTimesFavorite() != 0) {
+
+                        show.setTimesFavorite(0);
+
                         if (!user.getHistory().containsKey(show.getTitle())) {
-                            return "FavoriteRecommendation result: " + show.getTitle();
+                            if (!found) {
+                                found = true;
+                                result = "FavoriteRecommendation result: " + show.getTitle();
+                            }
                         }
+
                     }
                 }
             }
         }
 
-         return "FavoriteRecommendation cannot be applied!";
+        if (found) {
+            return result;
+
+        }
+        return "FavoriteRecommendation cannot be applied!";
     }
 
     public String recommendSearch(String username, String genre) {
@@ -487,9 +546,13 @@ public class Action {
                 if (o1.getFinalRating() == o2.getFinalRating()) {
                     return o1.getTitle().compareTo(o2.getTitle());
                 }
-                return Double.compare(o2.getFinalRating(), o1.getFinalRating());
+                return Double.compare(o1.getFinalRating(), o2.getFinalRating());
             }
         });
+
+        for (Show show :shows) {
+            show.setFinalRating(0);
+        }
 
         ArrayList<String> recommendedShows = new ArrayList<>();
 

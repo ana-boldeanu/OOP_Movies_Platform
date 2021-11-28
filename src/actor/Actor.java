@@ -7,6 +7,8 @@ import utils.Utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Information about an Actor
@@ -56,21 +58,30 @@ public class Actor {
     public void computeRating() {
         double sum = 0;
         int noShows = 0;
+
         for (Movie movie : moviesFilmography) {
             movie.computeRating();
             if (movie.getFinalRating() != 0) {
                 sum += movie.getFinalRating();
                 noShows++;
             }
+            movie.setFinalRating(0);
         }
+
         for (Serial serial : serialsFilmography) {
             serial.computeRating();
             if (serial.getFinalRating() != 0) {
                 sum += serial.getFinalRating();
                 noShows++;
             }
+            serial.setFinalRating(0);
         }
-        this.rating = sum;
+
+        if (noShows > 0) {
+            rating = sum / noShows;
+        } else {
+            rating = 0;
+        }
     }
 
     public boolean hasAwards(List<String> wantedAwards) {
@@ -90,7 +101,14 @@ public class Actor {
 
     public boolean hasKeyWords(List<String> keyWords) {
         for (String keyWord : keyWords) {
-            if (!careerDescription.contains(keyWord)) {
+
+            Pattern pattern = Pattern.compile("[ .,-]" + keyWord + "[ .,-]", Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(careerDescription);
+
+            boolean matchFound = matcher.find();
+            if (matchFound) {
+                continue;
+            } else {
                 return false;
             }
         }
@@ -115,6 +133,14 @@ public class Actor {
 
     public Map<ActorsAwards, Integer> getAwards() {
         return awards;
+    }
+
+    public void setNumberOfAwards(int numberOfAwards) {
+        this.numberOfAwards = numberOfAwards;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
     }
 
     @Override

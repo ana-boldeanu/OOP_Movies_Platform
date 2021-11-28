@@ -140,6 +140,10 @@ public class User {
         return noRatings;
     }
 
+    public void setNoRatings(int noRatings) {
+        this.noRatings = noRatings;
+    }
+
     @Override
     public String toString() {
         return username;
