@@ -110,6 +110,22 @@ public abstract class Show {
         return totalDuration;
     }
 
+    public void setFinalRating(double finalRating) {
+        this.finalRating = finalRating;
+    }
+
+    public void setTimesFavorite(int timesFavorite) {
+        this.timesFavorite = timesFavorite;
+    }
+
+    public void setTimesViewed(int timesViewed) {
+        this.timesViewed = timesViewed;
+    }
+
+    public void setTotalDuration(int totalDuration) {
+        this.totalDuration = totalDuration;
+    }
+
     @Override
     public String toString() {
         return title;
