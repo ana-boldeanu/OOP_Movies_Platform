@@ -26,7 +26,7 @@ public final class Movie extends Show {
      * Updates the list of ratings that have been received so far.
      * @param rating The new rating to be added
      */
-    public void receiveRating(double rating) {
+    public void receiveRating(final double rating) {
         ratingsList.add(rating);
     }
 

@@ -96,10 +96,9 @@ public abstract class Show {
     public abstract void computeRating();
 
     /**
-     * Updates the value of totalDuration for the current instance of Show.
-     * The value of totalDuration must always be computed before using its
-     * getter. After use, totalDuration must always be reset to 0 using setter.
-     * (So that if we need to use it later again, it will not stack)
+     * Calculates the value of totalDuration for the current instance of Show.
+     * The value of totalDuration will only be computed once, in class Main,
+     * for each given Database.
      */
     public abstract void computeTotalDuration();
 
@@ -160,29 +159,22 @@ public abstract class Show {
     /**
      * Use only to reset finalRating to value 0.
      */
-    public void setFinalRating(double finalRating) {
+    public void setFinalRating(final double finalRating) {
         this.finalRating = finalRating;
     }
 
     /**
      * Use only to reset timesFavorite to value 0.
      */
-    public void setTimesFavorite(int timesFavorite) {
+    public void setTimesFavorite(final int timesFavorite) {
         this.timesFavorite = timesFavorite;
     }
 
     /**
      * Use only to reset timesViewed to value 0.
      */
-    public void setTimesViewed(int timesViewed) {
+    public void setTimesViewed(final int timesViewed) {
         this.timesViewed = timesViewed;
-    }
-
-    /**
-     * Use only to reset totalDuration to value 0.
-     */
-    public void setTotalDuration(int totalDuration) {
-        this.totalDuration = totalDuration;
     }
 
     /**

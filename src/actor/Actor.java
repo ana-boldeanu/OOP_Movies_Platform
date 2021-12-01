@@ -160,11 +160,11 @@ public final class Actor {
         return awards;
     }
 
-    public void setNumberOfAwards(int numberOfAwards) {
+    public void setNumberOfAwards(final int numberOfAwards) {
         this.numberOfAwards = numberOfAwards;
     }
 
-    public void setRating(double rating) {
+    public void setRating(final double rating) {
         this.rating = rating;
     }
 
