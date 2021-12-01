@@ -101,22 +101,6 @@ public final class Utils {
     }
 
     /**
-     * Transforms an enum into a string
-     * @param award for Actors
-     * @return a String with the name of the award
-     */
-    public static String awardsToString(final ActorsAwards award) {
-        return switch (award.toString().toLowerCase()) {
-            case "best_screenplay" -> "BEST_SCREENPLAY";
-            case "best_supporting_actor" -> "BEST_SUPPORTING_ACTOR";
-            case "best_director" -> "BEST_DIRECTOR";
-            case "best_performance" -> "BEST_PERFORMANCE";
-            case "people_choice_award" -> "PEOPLE_CHOICE_AWARD";
-            default -> null;
-        };
-    }
-
-    /**
      * Transforms an array of JSON's into an array of strings
      * @param array of JSONs
      * @return a list of strings

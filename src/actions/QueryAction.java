@@ -218,7 +218,6 @@ public class QueryAction {
         for (Show show : filteredShows) {
             show.computeTimesFavorite(data);
             show.computeTimesViewed(data);
-            show.computeTotalDuration();
             show.computeRating();
         }
 
@@ -330,7 +329,6 @@ public class QueryAction {
             show.setFinalRating(0);
             show.setTimesFavorite(0);
             show.setTimesViewed(0);
-            show.setTotalDuration(0);
         }
 
         return sortedShows;

@@ -1,13 +1,5 @@
 Starting audit...
 [ERROR] D:\GitHub\POO_Tema1\.\src\actions\QueryAction.java:91:53: '3' is a magic number. [MagicNumber]
-[ERROR] D:\GitHub\POO_Tema1\.\src\actions\QueryAction.java:156:5: Method length is 180 lines (max allowed is 150). [MethodLength]
-[ERROR] D:\GitHub\POO_Tema1\.\src\actor\Actor.java:163:35: Parameter numberOfAwards should be final. [FinalParameters]
-[ERROR] D:\GitHub\POO_Tema1\.\src\actor\Actor.java:167:27: Parameter rating should be final. [FinalParameters]
-[ERROR] D:\GitHub\POO_Tema1\.\src\entertainment\Movie.java:29:31: Parameter rating should be final. [FinalParameters]
-[ERROR] D:\GitHub\POO_Tema1\.\src\entertainment\Show.java:163:32: Parameter finalRating should be final. [FinalParameters]
-[ERROR] D:\GitHub\POO_Tema1\.\src\entertainment\Show.java:170:34: Parameter timesFavorite should be final. [FinalParameters]
-[ERROR] D:\GitHub\POO_Tema1\.\src\entertainment\Show.java:177:32: Parameter timesViewed should be final. [FinalParameters]
-[ERROR] D:\GitHub\POO_Tema1\.\src\entertainment\Show.java:184:34: Parameter totalDuration should be final. [FinalParameters]
-[ERROR] D:\GitHub\POO_Tema1\.\src\user\User.java:190:30: Parameter noRatings should be final. [FinalParameters]
+[ERROR] D:\GitHub\POO_Tema1\.\src\actions\QueryAction.java:156:5: Method length is 178 lines (max allowed is 150). [MethodLength]
 Audit done.
-Checkstyle ends with 10 errors.
+Checkstyle ends with 2 errors.

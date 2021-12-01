@@ -8,6 +8,8 @@ import actor.Actor;
 import checker.Checkstyle;
 import checker.Checker;
 import common.Constants;
+import entertainment.Movie;
+import entertainment.Serial;
 import entertainment.Show;
 import fileio.ActionInputData;
 import fileio.Input;
@@ -81,6 +83,14 @@ public final class Main {
         // Entry point
         DataContainer data = new DataContainer(input); // Transform input into my own input classes
         String resultMessage = "";
+
+        // Compute the totalDuration for each Show (only once)
+        for (Movie movie : data.getMoviesList()) {
+            movie.computeTotalDuration();
+        }
+        for (Serial serial : data.getSerialsList()) {
+            serial.computeTotalDuration();
+        }
 
         for (ActionInputData command : input.getCommands()) {
             /**

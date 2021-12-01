@@ -187,7 +187,7 @@ public final class User {
         return noRatings;
     }
 
-    public void setNoRatings(int noRatings) {
+    public void setNoRatings(final int noRatings) {
         this.noRatings = noRatings;
     }
 

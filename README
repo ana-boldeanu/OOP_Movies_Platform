@@ -1,5 +1,63 @@
 // Boldeanu Ana-Maria
-// Grupa 321CD
-// Tema OOP
+// Group 321CD
+// OOP Homework 2021
 
- ideile, deciziile și abordările voastre
+================================== Approach ===================================
+
+    Our database consists of 4 types of entities: Users, Movies, Serials and
+Actors. For each of these, I made a separate class.
+    In the package "actions", I used the DataContainer class to copy the data
+from the Input classes into my own classes. There are 3 classes that use a
+DataContainer object: QueryAction, CommandAction and RecommendAction. Each of
+these classes has methods for every type of command/query/recommendation that
+a user can ask for.
+
+    In Main, there is an instance of DataContainer that will contain all the
+data (lists of Users, Movies, Serials and Actors) from our current database.
+For each given command, I determine which User required it (needed in the case
+of commands and recommendations) and then initialize an instance of the needed
+class (CommandAction, QueryAction or RecommendAction). Depending on the type
+of command, I use a switch case to get the result message that will be printed
+to output.
+
+    In the case of Movies and Serials, I decided to make an abstract class Shows
+that these two will extend, because they have many fields and methods in common.
+For example, the methods computeTimesViewed and computeTimesFavourite, but also
+common characteristics such as title, year, genres or cast.
+    For queries of Movies or Serials, I use the same method to treat both cases.
+The method is called queryShows, in the queryAction class. This method returns
+a list of Shows that respect the given criteria, which are either Movies or
+Serials depending on the required showType that is given as a parameter.
+    Other uses of the class Show are every time I had to treat them together,
+for example in all RecommendAction methods.
+
+    For the getPopular method of RecommendAction, I needed to use a local Class
+called GenrePopularity that stores information about each genre in order to be
+able to sort them according to their popularity.
+
+    For Actors, I decided to add two other fields, moviesFilmography and
+serialsFilmography in order to separate the 2 types of Shows, so that they
+would be lists of Shows rather than lists of Strings. All of this is determined
+inside the DataContainer constructor.
+
+    A minor issue that I encountered during the implementation was the way I
+decided to compute timesViewed, timesFavourite and finalRating for each Show.
+Although I could compute the values for these on instantiation of the
+DataContainer object and update them every time a command required to do so, I
+decided not to transfer all the extra parameters that were needed for such
+commands (the methods would become larger and I would have to keep perfect track
+of every method that changed one of these values).
+    Instead, I chose to compute these 3 values for a Show every time they were
+needed. The values are not updated automatically if for example a User adds a
+view to a Show, so they have to be reset to 0 after use, in order to recompute
+them later (if needed). Thus it is easier to keep track of where they are used
+and there is no need to update them in random parts of the code.
+
+
+==================== Changes to the original files ============================
+
+    Added a method in Utils for converting an ActorsAwards Enum to the name
+of the award as given in input tests.
+    Added a getter for currentSeason in the class Season.
+
+===============================================================================
